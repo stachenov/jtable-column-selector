@@ -29,7 +29,9 @@ class JTableColumnSelector {
         final JPopupMenu headerMenu = new JPopupMenu();
         TableModel model = table.getModel();
         for (int i = 0; i < model.getColumnCount(); ++i) {
-            headerMenu.add(new JMenuItem(model.getColumnName(i)));
+            final JMenuItem menuItem = new JMenuItem(model.getColumnName(i));
+            menuItem.setSelected(true);
+            headerMenu.add(menuItem);
         }
         table.getTableHeader().setComponentPopupMenu(headerMenu);
     }

@@ -16,7 +16,7 @@ import org.testng.annotations.*;
 
 public class JTableColumnSelectorTest {
 
-    private static final int A_REASONABLE_COLUMN_COUNT = 10;
+    private static final int A_REASONABLE_COLUMN_COUNT = 3;
     
     @Test
     public void create() {
@@ -34,8 +34,13 @@ public class JTableColumnSelectorTest {
         assertThat(headerMenu).isNotNull();
         assertThat(headerMenu.getComponentCount()).isEqualTo(columnCount);
         List<String> columnNames = getModelColumnNames(table);
-        List<String> menuLabels = getMenuLabels(headerMenu);
-        assertThat(menuLabels).containsExactlyElementsOf(columnNames);
+        List<JMenuItem> menuItems = getMenuItems(headerMenu);
+        assertThat(menuItems)
+                .extracting(item -> item.getText())
+                .containsExactlyElementsOf(columnNames);
+        assertThat(menuItems)
+                .extracting(item -> item.isSelected())
+                .containsOnly(true);
     }
     
     private JTable createTable(final int columnCount) {
@@ -52,9 +57,9 @@ public class JTableColumnSelectorTest {
                 .collect(Collectors.toList());
     }
 
-    private static List<String> getMenuLabels(JPopupMenu menu) {
+    private static List<JMenuItem> getMenuItems(JPopupMenu menu) {
         return IntStream.range(0, menu.getComponentCount())
-                .mapToObj(i -> ((JMenuItem) menu.getComponent(i)).getText())
+                .mapToObj(i -> (JMenuItem) menu.getComponent(i))
                 .collect(Collectors.toList());
     }
 

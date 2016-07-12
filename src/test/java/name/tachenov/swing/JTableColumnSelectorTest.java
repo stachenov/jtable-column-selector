@@ -34,7 +34,7 @@ public class JTableColumnSelectorTest {
         assertThat(headerMenu).isNotNull();
         assertThat(headerMenu.getComponentCount()).isEqualTo(columnCount);
         List<String> columnNames = getModelColumnNames(table);
-        List<JMenuItem> menuItems = getMenuItems(headerMenu);
+        List<JCheckBoxMenuItem> menuItems = getMenuItems(headerMenu);
         assertThat(menuItems)
                 .extracting(item -> item.getText())
                 .containsExactlyElementsOf(columnNames);
@@ -57,9 +57,9 @@ public class JTableColumnSelectorTest {
                 .collect(Collectors.toList());
     }
 
-    private static List<JMenuItem> getMenuItems(JPopupMenu menu) {
+    private static List<JCheckBoxMenuItem> getMenuItems(JPopupMenu menu) {
         return IntStream.range(0, menu.getComponentCount())
-                .mapToObj(i -> (JMenuItem) menu.getComponent(i))
+                .mapToObj(i -> (JCheckBoxMenuItem) menu.getComponent(i))
                 .collect(Collectors.toList());
     }
 

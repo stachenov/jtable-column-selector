@@ -43,6 +43,13 @@ public class JTableColumnSelectorTest {
         assertThat(headerMenu.getComponentCount()).isEqualTo(columnCount);
     }
     
+    @Test
+    public void installsProperlyWhenTableHasDefaultEmptyModel() {
+        JTableColumnSelector tcs = new JTableColumnSelector();
+        JTable table = new JTable();
+        tcs.install(table);
+    }
+
     private JTable createTable(final int columnCount) {
         TableModel model = mock(TableModel.class);
         when(model.getColumnCount()).thenReturn(columnCount);

@@ -25,7 +25,11 @@ class JTableColumnSelector {
      * @param table the table to install this selector on
      */
     public void install(JTable table) {
-        table.getTableHeader().setComponentPopupMenu(new JPopupMenu());
+        final JPopupMenu headerMenu = new JPopupMenu();
+        for (int i = 0; i < table.getColumnCount(); ++i) {
+            headerMenu.add(new JMenuItem());
+        }
+        table.getTableHeader().setComponentPopupMenu(headerMenu);
     }
     
 }

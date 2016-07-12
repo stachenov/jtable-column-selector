@@ -4,10 +4,14 @@
  */
 package name.tachenov.swing;
 
+import java.util.*;
+import java.util.stream.*;
 import javax.swing.*;
 import javax.swing.table.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import org.mockito.invocation.*;
+import org.mockito.stubbing.*;
 import org.testng.annotations.*;
 
 public class JTableColumnSelectorTest {
@@ -29,8 +33,31 @@ public class JTableColumnSelectorTest {
         JPopupMenu headerMenu = table.getTableHeader().getComponentPopupMenu();
         assertThat(headerMenu).isNotNull();
         assertThat(headerMenu.getComponentCount()).isEqualTo(columnCount);
+        List<String> columnNames = getModelColumnNames(table);
+        List<String> menuLabels = getMenuLabels(headerMenu);
+        assertThat(menuLabels).containsExactlyElementsOf(columnNames);
     }
     
+    private JTable createTable(final int columnCount) {
+        TableModel model = mock(TableModel.class);
+        when(model.getColumnCount()).thenReturn(columnCount);
+        when(model.getColumnName(anyInt())).thenAnswer(new ColumnNameAnswer());
+        return new JTable(model);
+    }
+    
+    private static List<String> getModelColumnNames(JTable table) {
+        final TableModel model = table.getModel();
+        return IntStream.range(0, model.getColumnCount())
+                .mapToObj(i -> model.getColumnName(i))
+                .collect(Collectors.toList());
+    }
+
+    private static List<String> getMenuLabels(JPopupMenu menu) {
+        return IntStream.range(0, menu.getComponentCount())
+                .mapToObj(i -> ((JMenuItem) menu.getComponent(i)).getText())
+                .collect(Collectors.toList());
+    }
+
     @Test
     public void includesAllModelColumns() {
         JTableColumnSelector tcs = new JTableColumnSelector();
@@ -50,10 +77,12 @@ public class JTableColumnSelectorTest {
         tcs.install(table);
     }
 
-    private JTable createTable(final int columnCount) {
-        TableModel model = mock(TableModel.class);
-        when(model.getColumnCount()).thenReturn(columnCount);
-        return new JTable(model);
+    private static class ColumnNameAnswer implements Answer<String> {
+
+        @Override
+        public String answer(InvocationOnMock invocation) throws Throwable {
+            return "column" + invocation.getArgument(0);
+        }
     }
-    
+
 }

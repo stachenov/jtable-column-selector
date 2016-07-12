@@ -4,6 +4,8 @@
  */
 package name.tachenov.swing;
 
+import javax.swing.*;
+
 /**
  * A class that allows user to select visible columns of a JTable using a popup menu.
  * 
@@ -12,9 +14,17 @@ package name.tachenov.swing;
 class JTableColumnSelector {
 
     /**
-     * Constructor.
+     * Constructor. Call {@link #install(javax.swing.JTable) install} to actually
+     * install it on a JTable.
      */
     public JTableColumnSelector() {
+    }
+
+    /**
+     * Installs this selector on a given table.
+     * @param table the table to install this selector on
+     */
+    public void install(JTable table) {
     }
     
 }

@@ -30,7 +30,19 @@ public class JTableColumnSelectorTest {
         assertThat(headerMenu).isNotNull();
         assertThat(headerMenu.getComponentCount()).isEqualTo(columnCount);
     }
-
+    
+    @Test
+    public void includesAllModelColumns() {
+        JTableColumnSelector tcs = new JTableColumnSelector();
+        final int columnCount = A_REASONABLE_COLUMN_COUNT;
+        JTable table = createTable(columnCount);
+        final TableColumn firstColumn = table.getColumnModel().getColumn(0);
+        table.getColumnModel().removeColumn(firstColumn);
+        tcs.install(table);
+        JPopupMenu headerMenu = table.getTableHeader().getComponentPopupMenu();
+        assertThat(headerMenu.getComponentCount()).isEqualTo(columnCount);
+    }
+    
     private JTable createTable(final int columnCount) {
         TableModel model = mock(TableModel.class);
         when(model.getColumnCount()).thenReturn(columnCount);

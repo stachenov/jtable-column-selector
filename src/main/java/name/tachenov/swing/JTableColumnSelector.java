@@ -5,6 +5,7 @@
 package name.tachenov.swing;
 
 import javax.swing.*;
+import javax.swing.table.*;
 
 /**
  * A class that allows user to select visible columns of a JTable using a popup menu.
@@ -26,7 +27,8 @@ class JTableColumnSelector {
      */
     public void install(JTable table) {
         final JPopupMenu headerMenu = new JPopupMenu();
-        for (int i = 0; i < table.getColumnCount(); ++i) {
+        TableModel model = table.getModel();
+        for (int i = 0; i < model.getColumnCount(); ++i) {
             headerMenu.add(new JMenuItem());
         }
         table.getTableHeader().setComponentPopupMenu(headerMenu);

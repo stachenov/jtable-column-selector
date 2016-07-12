@@ -21,6 +21,8 @@ public class JTableColumnSelectorTest {
         JTableColumnSelector tcs = new JTableColumnSelector();
         JTable table = new JTable();
         tcs.install(table);
+        JPopupMenu headerMenu = table.getTableHeader().getComponentPopupMenu();
+        assertThat(headerMenu).isNotNull();
     }
     
 }

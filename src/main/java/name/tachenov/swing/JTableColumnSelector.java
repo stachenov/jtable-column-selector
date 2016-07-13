@@ -75,6 +75,14 @@ class JTableColumnSelector {
         TableColumn column = columnModel.getColumn(vIndex);
         columnModel.removeColumn(column);
         hiddenColumns.put(modelIndex, column);
+        workaroundForSwingIndexOutOfBoundsBug(column);
+    }
+
+    private void workaroundForSwingIndexOutOfBoundsBug(TableColumn column) {
+        JTableHeader tableHeader = table.getTableHeader();
+        if (tableHeader.getDraggedColumn() == column) {
+            tableHeader.setDraggedColumn(null);
+        }
     }
 
 }

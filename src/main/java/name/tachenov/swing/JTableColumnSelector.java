@@ -48,19 +48,24 @@ class JTableColumnSelector {
         JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem(columnName);
         menuItem.setSelected(true);
         menuItem.addActionListener(action -> {
-            boolean show = menuItem.isSelected();
-            if (show)
-                showColumn(modelIndex);
-            else
-                hideColumn(modelIndex);
+            setColumnVisible(modelIndex, menuItem.isSelected());
         });
         return menuItem;
+    }
+
+    private void setColumnVisible(int modelIndex, boolean visible) {
+        if (visible)
+            showColumn(modelIndex);
+        else
+            hideColumn(modelIndex);
     }
 
     private void showColumn(int modelIndex) {
         TableColumn column = hiddenColumns.remove(modelIndex);
         TableColumnModel columnModel = table.getColumnModel();
         columnModel.addColumn(column);
+        final int addedViewIndex = columnModel.getColumnCount() - 1;
+        columnModel.moveColumn(addedViewIndex, modelIndex);
     }
     
     private void hideColumn(int modelIndex) {

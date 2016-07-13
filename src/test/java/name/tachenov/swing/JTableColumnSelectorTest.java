@@ -143,6 +143,16 @@ public class JTableColumnSelectorTest {
         menuItems.get(0).doClick();
         assertThat(table.getColumnCount()).isEqualTo(columnCount);
     }
+    
+    @Test
+    public void shownColumnsReappearsInItsPlaceWhenUsingModelOrder() {
+        final int columnCount = A_REASONABLE_COLUMN_COUNT;
+        setUpTableInstallTCSAndGetTheComponents(columnCount);
+        String firstColumnName = table.getColumnName(0);
+        menuItems.get(0).doClick();
+        menuItems.get(0).doClick();
+        assertThat(table.getColumnName(0)).isEqualTo(firstColumnName);
+    }
 
     private static class ColumnNameAnswer implements Answer<String> {
 

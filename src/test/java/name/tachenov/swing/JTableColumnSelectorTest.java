@@ -18,24 +18,33 @@ public class JTableColumnSelectorTest {
 
     private static final String DP_COLUMN_INDEXES = "columnIndexes";
     private static final int A_REASONABLE_COLUMN_COUNT = 3;
+    private JTable table;
+    private JTableColumnSelector tcs;
+    private List<JCheckBoxMenuItem> menuItems;
+    private TableColumnModel columnModel;
+    
+    @AfterMethod
+    public void cleanUp() {
+        table = null; tcs = null; menuItems = null; columnModel = null;
+    }
     
     @Test
     public void create() {
-        JTableColumnSelector tcs = new JTableColumnSelector();
+        tcs = new JTableColumnSelector();
         assertThat(tcs).isNotNull(); // Not necessary, but makes FindBugs happy.
     }
     
     @Test
     public void install() {
-        JTableColumnSelector tcs = new JTableColumnSelector();
+        tcs = new JTableColumnSelector();
         final int columnCount = A_REASONABLE_COLUMN_COUNT;
-        JTable table = createTable(columnCount);
+        table = createTable(columnCount);
         tcs.install(table);
         JPopupMenu headerMenu = table.getTableHeader().getComponentPopupMenu();
         assertThat(headerMenu).isNotNull();
         assertThat(headerMenu.getComponentCount()).isEqualTo(columnCount);
         List<String> columnNames = getModelColumnNames(table);
-        List<JCheckBoxMenuItem> menuItems = getMenuItems(table);
+        menuItems = getMenuItems(table);
         assertThat(menuItems)
                 .extracting(item -> item.getText())
                 .containsExactlyElementsOf(columnNames);
@@ -67,9 +76,9 @@ public class JTableColumnSelectorTest {
 
     @Test
     public void includesAllModelColumns() {
-        JTableColumnSelector tcs = new JTableColumnSelector();
+        tcs = new JTableColumnSelector();
         final int columnCount = A_REASONABLE_COLUMN_COUNT;
-        JTable table = createTable(columnCount);
+        table = createTable(columnCount);
         final TableColumn firstColumn = table.getColumnModel().getColumn(0);
         table.getColumnModel().removeColumn(firstColumn);
         tcs.install(table);
@@ -79,8 +88,8 @@ public class JTableColumnSelectorTest {
     
     @Test
     public void installsProperlyWhenTableHasDefaultEmptyModel() {
-        JTableColumnSelector tcs = new JTableColumnSelector();
-        JTable table = new JTable();
+        tcs = new JTableColumnSelector();
+        table = new JTable();
         tcs.install(table);
     }
     
@@ -92,10 +101,10 @@ public class JTableColumnSelectorTest {
     @Test(dataProvider = DP_COLUMN_INDEXES)
     public void menuItemsHideColumns(int columnIndex) {
         final int columnCount = A_REASONABLE_COLUMN_COUNT;
-        JTable table = createTable(columnCount);
-        JTableColumnSelector tcs = new JTableColumnSelector();
+        table = createTable(columnCount);
+        tcs = new JTableColumnSelector();
         tcs.install(table);
-        List<JCheckBoxMenuItem> menuItems = getMenuItems(table);
+        menuItems = getMenuItems(table);
         String columnName = table.getColumnName(columnIndex);
         menuItems.get(columnIndex).doClick();
         assertThat(table.getColumnCount()).isEqualTo(columnCount - 1);
@@ -106,6 +115,24 @@ public class JTableColumnSelectorTest {
         return IntStream.range(0, table.getColumnCount())
                 .mapToObj(i -> table.getColumnName(i))
                 .collect(Collectors.toList());
+    }
+
+    private void setUpTableInstallTCSAndGetTheComponents(int columnCount) {
+        table = createTable(columnCount);
+        tcs = new JTableColumnSelector();
+        tcs.install(table);
+        menuItems = getMenuItems(table);
+        columnModel = table.getColumnModel();
+    }
+    
+    @Test
+    public void theRightColumnIsHiddenEvenIfColumnsAreRearranged() {
+        final int columnCount = A_REASONABLE_COLUMN_COUNT;
+        setUpTableInstallTCSAndGetTheComponents(columnCount);
+        String firstColumnName = table.getColumnName(0);
+        columnModel.moveColumn(0, columnCount - 1);
+        menuItems.get(0).doClick();
+        assertThat(getViewColumnNames(table)).doesNotContain(firstColumnName);
     }
 
     private static class ColumnNameAnswer implements Answer<String> {

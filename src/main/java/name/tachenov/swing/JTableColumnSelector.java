@@ -29,12 +29,14 @@ class JTableColumnSelector {
         final JPopupMenu headerMenu = new JPopupMenu();
         TableModel model = table.getModel();
         for (int i = 0; i < model.getColumnCount(); ++i) {
-            JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem(model.getColumnName(i));
+            final String columnName = model.getColumnName(i);
+            JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem(columnName);
             menuItem.setSelected(true);
-            final int index = i;
+            final int mIndex = i;
             menuItem.addActionListener(action -> {
+                int vIndex = table.convertColumnIndexToView(mIndex);
                 TableColumnModel columnModel = table.getColumnModel();
-                columnModel.removeColumn(columnModel.getColumn(index));
+                columnModel.removeColumn(columnModel.getColumn(vIndex));
             });
             headerMenu.add(menuItem);
         }

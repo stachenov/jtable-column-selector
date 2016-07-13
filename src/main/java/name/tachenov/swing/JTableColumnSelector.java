@@ -31,6 +31,10 @@ class JTableColumnSelector {
         for (int i = 0; i < model.getColumnCount(); ++i) {
             JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem(model.getColumnName(i));
             menuItem.setSelected(true);
+            menuItem.addActionListener(action -> {
+                TableColumnModel columnModel = table.getColumnModel();
+                columnModel.removeColumn(columnModel.getColumn(0));
+            });
             headerMenu.add(menuItem);
         }
         table.getTableHeader().setComponentPopupMenu(headerMenu);

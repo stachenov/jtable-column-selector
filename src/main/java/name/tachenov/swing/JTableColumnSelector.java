@@ -65,7 +65,8 @@ class JTableColumnSelector {
         TableColumnModel columnModel = table.getColumnModel();
         columnModel.addColumn(column);
         final int addedViewIndex = columnModel.getColumnCount() - 1;
-        columnModel.moveColumn(addedViewIndex, modelIndex);
+        if (modelIndex < columnModel.getColumnCount())
+            columnModel.moveColumn(addedViewIndex, modelIndex);
     }
     
     private void hideColumn(int modelIndex) {

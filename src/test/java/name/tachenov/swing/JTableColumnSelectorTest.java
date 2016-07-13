@@ -145,13 +145,26 @@ public class JTableColumnSelectorTest {
     }
     
     @Test
-    public void shownColumnsReappearsInItsPlaceWhenUsingModelOrder() {
+    public void shownColumnReappearsInItsPlaceWhenUsingModelOrder() {
         final int columnCount = A_REASONABLE_COLUMN_COUNT;
         setUpTableInstallTCSAndGetTheComponents(columnCount);
         String firstColumnName = table.getColumnName(0);
         menuItems.get(0).doClick();
         menuItems.get(0).doClick();
         assertThat(table.getColumnName(0)).isEqualTo(firstColumnName);
+    }
+    
+    @Test
+    public void columnReappearsSafelyEvenIfOtherColumnsWereRemoved() {
+        final int columnCount = A_REASONABLE_COLUMN_COUNT;
+        setUpTableInstallTCSAndGetTheComponents(columnCount);
+        int lastIndex = columnCount - 1;
+        String lastColumnName = table.getColumnName(lastIndex);
+        menuItems.get(lastIndex).doClick();
+        menuItems.get(0).doClick();
+        menuItems.get(lastIndex).doClick();
+        lastIndex = table.getColumnCount() - 1;
+        assertThat(table.getColumnName(lastIndex)).isEqualTo(lastColumnName);
     }
 
     private static class ColumnNameAnswer implements Answer<String> {

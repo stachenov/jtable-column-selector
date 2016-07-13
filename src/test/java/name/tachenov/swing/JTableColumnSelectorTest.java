@@ -134,6 +134,15 @@ public class JTableColumnSelectorTest {
         menuItems.get(0).doClick();
         assertThat(getViewColumnNames(table)).doesNotContain(firstColumnName);
     }
+    
+    @Test
+    public void canShowHiddenColumn() {
+        final int columnCount = A_REASONABLE_COLUMN_COUNT;
+        setUpTableInstallTCSAndGetTheComponents(columnCount);
+        menuItems.get(0).doClick();
+        menuItems.get(0).doClick();
+        assertThat(table.getColumnCount()).isEqualTo(columnCount);
+    }
 
     private static class ColumnNameAnswer implements Answer<String> {
 

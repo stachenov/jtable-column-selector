@@ -4,6 +4,7 @@
  */
 package name.tachenov.swing;
 
+import java.util.*;
 import javax.swing.*;
 import javax.swing.table.*;
 
@@ -14,6 +15,7 @@ import javax.swing.table.*;
  */
 class JTableColumnSelector {
 
+    private final Map<Integer, TableColumn> hiddenColumns = new HashMap<>();
     private JTable table;
 
     /**
@@ -46,15 +48,27 @@ class JTableColumnSelector {
         JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem(columnName);
         menuItem.setSelected(true);
         menuItem.addActionListener(action -> {
-            hideColumn(modelIndex);
+            boolean show = menuItem.isSelected();
+            if (show)
+                showColumn(modelIndex);
+            else
+                hideColumn(modelIndex);
         });
         return menuItem;
     }
 
+    private void showColumn(int modelIndex) {
+        TableColumn column = hiddenColumns.remove(modelIndex);
+        TableColumnModel columnModel = table.getColumnModel();
+        columnModel.addColumn(column);
+    }
+    
     private void hideColumn(int modelIndex) {
         int vIndex = table.convertColumnIndexToView(modelIndex);
         TableColumnModel columnModel = table.getColumnModel();
-        columnModel.removeColumn(columnModel.getColumn(vIndex));
+        TableColumn column = columnModel.getColumn(vIndex);
+        columnModel.removeColumn(column);
+        hiddenColumns.put(modelIndex, column);
     }
-    
+
 }

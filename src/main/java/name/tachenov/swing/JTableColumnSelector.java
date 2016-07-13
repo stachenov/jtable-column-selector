@@ -31,9 +31,10 @@ class JTableColumnSelector {
         for (int i = 0; i < model.getColumnCount(); ++i) {
             JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem(model.getColumnName(i));
             menuItem.setSelected(true);
+            final int index = i;
             menuItem.addActionListener(action -> {
                 TableColumnModel columnModel = table.getColumnModel();
-                columnModel.removeColumn(columnModel.getColumn(0));
+                columnModel.removeColumn(columnModel.getColumn(index));
             });
             headerMenu.add(menuItem);
         }

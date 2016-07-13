@@ -16,6 +16,7 @@ import org.testng.annotations.*;
 
 public class JTableColumnSelectorTest {
 
+    private static final String DP_COLUMN_INDEXES = "columnIndexes";
     private static final int A_REASONABLE_COLUMN_COUNT = 3;
     
     @Test
@@ -83,15 +84,28 @@ public class JTableColumnSelectorTest {
         tcs.install(table);
     }
     
-    @Test
-    public void menuItemsHideColumns() {
+    @DataProvider(name = DP_COLUMN_INDEXES)
+    public Object[][] columnIndexes() {
+        return new Object[][] {{0}, {1}};
+    }
+    
+    @Test(dataProvider = DP_COLUMN_INDEXES)
+    public void menuItemsHideColumns(int columnIndex) {
         final int columnCount = A_REASONABLE_COLUMN_COUNT;
         JTable table = createTable(columnCount);
         JTableColumnSelector tcs = new JTableColumnSelector();
         tcs.install(table);
         List<JCheckBoxMenuItem> menuItems = getMenuItems(table);
-        menuItems.get(0).doClick();
+        String columnName = table.getColumnName(columnIndex);
+        menuItems.get(columnIndex).doClick();
         assertThat(table.getColumnCount()).isEqualTo(columnCount - 1);
+        assertThat(getViewColumnNames(table)).doesNotContain(columnName);
+    }
+
+    private static List<String> getViewColumnNames(JTable table) {
+        return IntStream.range(0, table.getColumnCount())
+                .mapToObj(i -> table.getColumnName(i))
+                .collect(Collectors.toList());
     }
 
     private static class ColumnNameAnswer implements Answer<String> {

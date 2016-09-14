@@ -5,9 +5,9 @@ The idea is to have a context menu on the table header so that the user can sele
 
 As it is now, it's usable but could use much more work. It doesn't handle model change or structural changes within the model, for example. But it works. It is intended to be used as an illustration to this short TDD tutorial:
 
-Part1: -- to be filled ---
+Part1: http://www.tachenov.name/2016/hide-and-show-jtable-columns/
 
-Part2: -- to be filled ---
+Part2: http://www.tachenov.name/2016/hide-and-show-jtable-columns-pt-2/
 
 A very similar work can be found here:
 
